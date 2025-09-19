@@ -1,0 +1,167 @@
+# NGINX Ingress Controller Configuration
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: govdocshield-ingress
+  namespace: govdocshield
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1000m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+      more_set_headers "Content-Security-Policy: default-src 'self'";
+spec:
+  tls:
+  - hosts:
+    - govdocshield.defense.gov
+    - api.govdocshield.defense.gov
+    - dashboard.govdocshield.defense.gov
+    secretName: govdocshield-tls
+  rules:
+  # Main API
+  - host: api.govdocshield.defense.gov
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: govdocshield-api-service
+            port:
+              number: 8080
+  # Dashboard
+  - host: dashboard.govdocshield.defense.gov
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: govdocshield-dashboard-service
+            port:
+              number: 8501
+  # Default route to dashboard
+  - host: govdocshield.defense.gov
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: govdocshield-api-service
+            port:
+              number: 8080
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: govdocshield-dashboard-service
+            port:
+              number: 8501
+---
+# Network Policy for Security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: govdocshield-network-policy
+  namespace: govdocshield
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: nginx-ingress
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+  - from:
+    - podSelector:
+        matchLabels:
+          app: govdocshield-api
+    - podSelector:
+        matchLabels:
+          app: govdocshield-dashboard
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  - to: {}
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+  - to: {}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+---
+# Service Monitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: govdocshield-api-monitor
+  namespace: govdocshield
+  labels:
+    app: govdocshield-api
+spec:
+  selector:
+    matchLabels:
+      app: govdocshield-api
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+---
+# Pod Disruption Budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: govdocshield-api-pdb
+  namespace: govdocshield
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: govdocshield-api
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: govdocshield-dashboard-pdb
+  namespace: govdocshield
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: govdocshield-dashboard

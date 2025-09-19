@@ -1,0 +1,24 @@
+# CLI Dependencies for GovDocShield X
+
+# Core CLI framework
+click>=8.1.0
+rich>=13.0.0
+
+# Async file operations
+aiofiles>=22.0.0
+
+# HTTP client for API calls
+requests>=2.31.0
+
+# Scientific computing (lightweight alternatives)
+numpy>=1.24.0
+
+# Optional dependencies for enhanced functionality
+colorama>=0.4.6  # Windows terminal colors
+psutil>=5.9.0    # System monitoring
+tabulate>=0.9.0  # Table formatting
+pydantic>=2.0.0  # Data validation
+
+# For development/testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0

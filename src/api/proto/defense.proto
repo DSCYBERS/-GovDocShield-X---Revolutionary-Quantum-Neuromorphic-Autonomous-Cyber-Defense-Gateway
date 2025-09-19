@@ -1,0 +1,364 @@
+// Protocol Buffer definition for GovDocShield X gRPC API
+// Defines the high-performance threat detection service interface
+
+syntax = "proto3";
+
+package govdocshield;
+
+// Service definition for GovDocShield X
+service DefenseService {
+  // Unary RPC for single document analysis
+  rpc AnalyzeDocument(DefenseRequest) returns (DefenseResponse);
+  
+  // Server-side streaming for real-time chunk analysis
+  rpc StreamAnalyzeDocument(stream StreamAnalysisRequest) returns (stream StreamAnalysisResponse);
+  
+  // Bidirectional streaming for batch processing
+  rpc BatchAnalyzeDocuments(stream DefenseRequest) returns (stream DefenseResponse);
+  
+  // Get real-time system metrics
+  rpc GetSystemMetrics(MetricsRequest) returns (MetricsResponse);
+  
+  // Quantum-enhanced analysis (specialized endpoint)
+  rpc QuantumAnalyze(QuantumRequest) returns (QuantumResponse);
+  
+  // Neuromorphic processing endpoint
+  rpc NeuromorphicAnalyze(NeuromorphicRequest) returns (NeuromorphicResponse);
+  
+  // Bio-inspired swarm analysis
+  rpc SwarmAnalyze(SwarmRequest) returns (SwarmResponse);
+  
+  // DNA storage operations
+  rpc StoreDNA(DNAStorageRequest) returns (DNAStorageResponse);
+  rpc RetrieveDNA(DNARetrievalRequest) returns (DNARetrievalResponse);
+  
+  // Forensic report generation
+  rpc GenerateForensicReport(ForensicRequest) returns (ForensicResponse);
+}
+
+// Basic threat analysis request
+message DefenseRequest {
+  bytes file_content = 1;
+  string analysis_mode = 2;  // quantum, neuromorphic, bio_inspired, comprehensive
+  string priority_level = 3; // low, normal, high, critical
+  string classification_level = 4; // UNCLASSIFIED, CONFIDENTIAL, SECRET, TOP_SECRET
+  string file_name = 5;
+  string file_type = 6;
+  map<string, string> metadata = 7;
+  bool enable_dna_storage = 8;
+  string request_id = 9;
+}
+
+// Basic threat analysis response
+message DefenseResponse {
+  string analysis_id = 1;
+  float threat_probability = 2;
+  float confidence_score = 3;
+  string threat_level = 4; // MINIMAL, LOW, MEDIUM, HIGH, CRITICAL
+  string analysis_mode = 5;
+  float processing_time_ms = 6;
+  
+  // Engine-specific features
+  QuantumFeatures quantum_features = 7;
+  NeuromorphicFeatures neuromorphic_features = 8;
+  BioInspiredFeatures bio_inspired_features = 9;
+  
+  // Additional information
+  repeated string recommendations = 10;
+  string dna_storage_id = 11;
+  int64 timestamp = 12;
+  string status = 13;
+  map<string, string> metadata = 14;
+}
+
+// Streaming analysis request
+message StreamAnalysisRequest {
+  bytes chunk_data = 1;
+  int32 chunk_sequence = 2;
+  bool is_final = 3;
+  string analysis_mode = 4;
+  string stream_id = 5;
+  int32 chunk_size = 6;
+}
+
+// Streaming analysis response
+message StreamAnalysisResponse {
+  string stream_id = 1;
+  int32 chunk_sequence = 2;
+  float partial_threat_probability = 3;
+  bool processing_complete = 4;
+  ChunkAnalysis chunk_result = 5;
+  float cumulative_threat_probability = 6;
+  string status = 7;
+}
+
+// Chunk analysis details
+message ChunkAnalysis {
+  int32 chunk_number = 1;
+  int32 chunk_size = 2;
+  float entropy = 3;
+  float suspicious_byte_ratio = 4;
+  repeated string patterns_detected = 5;
+  float processing_time_ms = 6;
+}
+
+// Quantum analysis request
+message QuantumRequest {
+  bytes data = 1;
+  string quantum_algorithm = 2; // QNN, QSVM, QCNN
+  int32 num_qubits = 3;
+  int32 num_layers = 4;
+  string optimizer = 5; // COBYLA, SPSA
+  int32 shots = 6;
+  bool enable_error_mitigation = 7;
+}
+
+// Quantum analysis response
+message QuantumResponse {
+  string analysis_id = 1;
+  float threat_probability = 2;
+  float confidence_score = 3;
+  float quantum_advantage = 4;
+  QuantumFeatures quantum_features = 5;
+  string quantum_circuit_info = 6;
+  float processing_time_ms = 7;
+}
+
+// Quantum-specific features
+message QuantumFeatures {
+  int32 superposition_states = 1;
+  float entanglement_measure = 2;
+  int32 quantum_circuit_depth = 3;
+  int32 gate_count = 4;
+  map<string, float> feature_importance = 5;
+  string quantum_algorithm_used = 6;
+  float quantum_error_rate = 7;
+}
+
+// Neuromorphic analysis request
+message NeuromorphicRequest {
+  bytes spike_data = 1;
+  int32 input_neurons = 2;
+  int32 hidden_neurons = 3;
+  int32 output_neurons = 4;
+  float membrane_threshold = 5;
+  float decay_rate = 6;
+  int32 time_steps = 7;
+}
+
+// Neuromorphic analysis response
+message NeuromorphicResponse {
+  string analysis_id = 1;
+  float threat_probability = 2;
+  float confidence_score = 3;
+  NeuromorphicFeatures neuromorphic_features = 4;
+  MimicryDetection mimicry_detection = 5;
+  float processing_time_ms = 6;
+}
+
+// Neuromorphic-specific features
+message NeuromorphicFeatures {
+  float spike_frequency = 1;
+  int32 neuron_activations = 2;
+  float membrane_potential_avg = 3;
+  float energy_consumption_mj = 4;
+  float latency_ms = 5;
+  bool burst_detection = 6;
+  repeated float spike_pattern = 7;
+}
+
+// Mimicry attack detection
+message MimicryDetection {
+  bool mimicry_detected = 1;
+  float detection_confidence = 2;
+  bool temporal_anomalies = 3;
+  bool frequency_anomalies = 4;
+  bool amplitude_anomalies = 5;
+  float detection_accuracy = 6;
+}
+
+// Swarm intelligence request
+message SwarmRequest {
+  bytes data = 1;
+  string swarm_algorithm = 2; // ACO, PSO, ABC, BioShieldNet
+  int32 num_agents = 3;
+  float pheromone_decay = 4;
+  int32 max_iterations = 5;
+  bool enable_collective_learning = 6;
+}
+
+// Swarm intelligence response
+message SwarmResponse {
+  string analysis_id = 1;
+  float threat_probability = 2;
+  float confidence_score = 3;
+  bool zero_day_detection = 4;
+  BioInspiredFeatures bio_inspired_features = 5;
+  SwarmConsensus swarm_consensus = 6;
+  float processing_time_ms = 7;
+}
+
+// Bio-inspired specific features
+message BioInspiredFeatures {
+  float ant_colony_pheromones = 1;
+  float particle_swarm_optimization = 2;
+  float bee_colony_consensus = 3;
+  bool zero_day_detection = 4;
+  float swarm_agreement = 5;
+  float collective_intelligence = 6;
+  float false_positive_reduction = 7;
+  repeated string algorithms_used = 8;
+}
+
+// Swarm consensus information
+message SwarmConsensus {
+  float consensus_strength = 1;
+  int32 participating_agents = 2;
+  float agreement_level = 3;
+  map<string, float> algorithm_contributions = 4;
+  float collective_intelligence_score = 5;
+}
+
+// DNA storage request
+message DNAStorageRequest {
+  bytes data = 1;
+  string classification_level = 2;
+  bytes encryption_key = 3;
+  bool enable_error_correction = 4;
+  string storage_id = 5;
+  map<string, string> metadata = 6;
+}
+
+// DNA storage response
+message DNAStorageResponse {
+  string storage_id = 1;
+  string encoded_sequence_preview = 2;
+  float storage_density = 3;
+  float error_correction_overhead = 4;
+  int32 estimated_retention_years = 5;
+  bool quantum_resistance = 6;
+  float storage_cost_per_tb = 7;
+  float encoding_time_ms = 8;
+  string status = 9;
+}
+
+// DNA retrieval request
+message DNARetrievalRequest {
+  string storage_id = 1;
+  bytes decryption_key = 2;
+  bool verify_integrity = 3;
+  string requester_id = 4;
+}
+
+// DNA retrieval response
+message DNARetrievalResponse {
+  string storage_id = 1;
+  bytes retrieved_data = 2;
+  map<string, string> metadata = 3;
+  bool integrity_verified = 4;
+  string status = 5;
+  float retrieval_time_ms = 6;
+}
+
+// System metrics request
+message MetricsRequest {
+  bool include_performance = 1;
+  bool include_engine_stats = 2;
+  bool include_storage_stats = 3;
+  string time_range = 4; // last_hour, last_day, last_week
+}
+
+// System metrics response
+message MetricsResponse {
+  EngineMetrics quantum_engine = 1;
+  EngineMetrics neuromorphic_engine = 2;
+  EngineMetrics bio_inspired_engine = 3;
+  StorageMetrics dna_storage = 4;
+  SystemStats system_stats = 5;
+  int64 timestamp = 6;
+}
+
+// Engine performance metrics
+message EngineMetrics {
+  string status = 1; // online, offline, degraded
+  float accuracy = 2;
+  float average_processing_time_ms = 3;
+  int32 total_analyses = 4;
+  float error_rate = 5;
+  map<string, float> specific_metrics = 6;
+}
+
+// Storage system metrics
+message StorageMetrics {
+  string status = 1;
+  int64 total_stored_bytes = 2;
+  int32 total_partitions = 3;
+  float utilization_percent = 4;
+  float storage_density_pb_per_gram = 5;
+  int32 retention_years = 6;
+  bool quantum_resistance = 7;
+}
+
+// System statistics
+message SystemStats {
+  int32 active_analyses = 1;
+  int32 cached_results = 2;
+  float uptime_hours = 3;
+  float cpu_usage_percent = 4;
+  float memory_usage_percent = 5;
+  int64 total_requests = 6;
+  float average_response_time_ms = 7;
+}
+
+// Forensic report request
+message ForensicRequest {
+  string analysis_id = 1;
+  bool include_blockchain_proof = 2;
+  string classification_level = 3;
+  string requester_id = 4;
+  bool court_admissible = 5;
+}
+
+// Forensic report response
+message ForensicResponse {
+  string report_id = 1;
+  string analysis_id = 2;
+  ForensicEvidence evidence = 3;
+  BlockchainProof blockchain_proof = 4;
+  string classification_level = 5;
+  bool court_admissible = 6;
+  int64 generation_timestamp = 7;
+  string status = 8;
+}
+
+// Forensic evidence details
+message ForensicEvidence {
+  string file_hash = 1;
+  string threat_assessment = 2;
+  float threat_probability = 3;
+  float confidence_score = 4;
+  string analysis_methodology = 5;
+  repeated string evidence_artifacts = 6;
+  string chain_of_custody = 7;
+  map<string, string> technical_details = 8;
+}
+
+// Blockchain proof for evidence integrity
+message BlockchainProof {
+  string block_hash = 1;
+  string previous_block_hash = 2;
+  int64 timestamp = 3;
+  string digital_signature = 4;
+  string merkle_root = 5;
+  bool quantum_resistant_signature = 6;
+  string validation_status = 7;
+}
+
+// Error handling
+message ErrorResponse {
+  int32 error_code = 1;
+  string error_message = 2;
+  string error_details = 3;
+  int64 timestamp = 4;
+  string request_id = 5;
+}

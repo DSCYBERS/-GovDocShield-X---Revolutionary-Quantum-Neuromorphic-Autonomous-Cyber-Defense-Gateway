@@ -1,0 +1,122 @@
+# GovDocShield X - Core Dependencies
+
+# Web Framework & API
+fastapi>=0.104.0
+uvicorn[standard]>=0.23.0
+grpcio>=1.59.0
+grpcio-tools>=1.59.0
+httpx>=0.25.0
+
+# Machine Learning & AI
+torch>=2.1.0
+torchvision>=0.16.0
+transformers>=4.35.0
+scikit-learn>=1.3.0
+onnx>=1.15.0
+tritonclient[all]>=2.38.0
+
+# Quantum Computing
+qiskit>=0.45.0
+qiskit-machine-learning>=0.7.0
+pennylane>=0.32.0
+cirq>=1.3.0
+qiskit-aer>=0.13.0
+
+# Neuromorphic Computing
+norse>=1.0.0
+spikingjelly>=0.0.0.0.14
+bindsnet>=0.3.0
+snntorch>=0.6.0
+
+# Bio-Inspired Algorithms
+deap>=1.4.0
+scikit-opt>=0.6.0
+pymoo>=0.6.0
+platypus-opt>=1.0.4
+
+# Graph Processing & Databases
+networkx>=3.2.0
+neo4j>=5.14.0
+torch-geometric>=2.4.0
+dgl>=1.1.0
+
+# Blockchain & Cryptography
+cryptography>=41.0.0
+pycryptodome>=3.19.0
+hashlib-compat>=1.0.0
+web3>=6.11.0
+
+# File Processing & Analysis
+python-magic>=0.4.27
+pypdf>=3.17.0
+python-docx>=1.1.0
+pillow>=10.1.0
+librosa>=0.10.0
+opencv-python>=4.8.0
+
+# Data Processing
+numpy>=1.24.0
+pandas>=2.1.0
+scipy>=1.11.0
+numba>=0.58.0
+
+# Infrastructure & Messaging
+kafka-python>=2.0.2
+celery>=5.3.0
+redis>=5.0.0
+kubernetes>=28.1.0
+docker>=6.1.0
+
+# Security & Sandboxing
+yara-python>=4.4.0
+pefile>=2023.2.7
+oletools>=0.60.1
+clamav>=0.102.0
+
+# Monitoring & Logging
+prometheus-client>=0.19.0
+structlog>=23.2.0
+opentelemetry-api>=1.21.0
+sentry-sdk>=1.38.0
+
+# Web Dashboard
+streamlit>=1.28.0
+plotly>=5.17.0
+dash>=2.14.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.10.0
+flake8>=6.1.0
+mypy>=1.6.0
+coverage>=7.3.0
+
+# DNA Storage Simulation
+biopython>=1.81
+numpy-financial>=1.0.0
+
+# Specialized Security
+ssdeep>=3.4
+fuzzy>=1.2.2
+volatility3>=2.4.1
+
+# Performance & Optimization
+psutil>=5.9.0
+memory-profiler>=0.61.0
+line-profiler>=4.1.0
+
+# Configuration
+pydantic>=2.4.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+click>=8.1.0
+
+# Async & Concurrency
+asyncio>=3.11.0
+aiofiles>=23.2.0
+aioredis>=2.0.0
+
+# Government Standards
+defusedxml>=0.7.1
+secure>=0.3.0

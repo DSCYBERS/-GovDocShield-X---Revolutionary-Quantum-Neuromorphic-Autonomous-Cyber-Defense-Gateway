@@ -1,0 +1,33 @@
+# Dashboard Dependencies for GovDocShield X
+
+# Core dashboard framework
+streamlit>=1.28.0
+
+# Plotting and visualization
+plotly>=5.17.0
+pandas>=2.0.0
+
+# Scientific computing
+numpy>=1.24.0
+
+# HTTP client for API integration
+requests>=2.31.0
+
+# Async file operations
+aiofiles>=22.0.0
+
+# Additional visualization
+seaborn>=0.12.0
+matplotlib>=3.7.0
+
+# Data processing
+scipy>=1.11.0
+
+# For enhanced UI components
+streamlit-option-menu>=0.3.6
+streamlit-aggrid>=0.3.4
+streamlit-plotly-events>=0.0.6
+
+# Optional real-time capabilities
+websockets>=11.0.0
+asyncio-mqtt>=0.13.0

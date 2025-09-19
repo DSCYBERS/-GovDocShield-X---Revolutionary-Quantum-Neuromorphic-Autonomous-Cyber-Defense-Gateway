@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovDocShield X Enhanced - Web Client</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>GovDocShield X Enhanced</span>
+                <span class="version">v2.0.0</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="nav-btn" data-tab="analyze">
+                    <i class="fas fa-search"></i> Analyze
+                </button>
+                <button class="nav-btn" data-tab="threats">
+                    <i class="fas fa-exclamation-triangle"></i> Threats
+                </button>
+                <button class="nav-btn" data-tab="quantum">
+                    <i class="fas fa-atom"></i> Quantum
+                </button>
+                <button class="nav-btn" data-tab="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </nav>
+            <div class="status-indicator">
+                <span class="status-dot online"></span>
+                <span class="status-text">System Online</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard-tab">
+            <div class="dashboard-grid">
+                <!-- System Status -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heartbeat"></i> System Status</h3>
+                        <div class="status-badge online">OPERATIONAL</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric">
+                            <span class="metric-label">Quantum Coherence</span>
+                            <div class="metric-value">
+                                <span class="value" id="quantum-coherence">87.3%</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87.3%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Neuromorphic Activity</span>
+                            <div class="metric-value">
+                                <span class="value" id="neuromorphic-activity">92.1%</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 92.1%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Bio-Inspired Immunity</span>
+                            <div class="metric-value">
+                                <span class="value" id="bio-immunity">94.8%</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 94.8%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Threats -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shield-virus"></i> Real-time Threats</h3>
+                        <span class="count-badge" id="threat-count">3</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="threat-list" id="threat-list">
+                            <div class="threat-item high">
+                                <div class="threat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="threat-info">
+                                    <span class="threat-type">Advanced Persistent Threat</span>
+                                    <span class="threat-time">2 minutes ago</span>
+                                </div>
+                                <div class="threat-severity high">HIGH</div>
+                            </div>
+                            <div class="threat-item medium">
+                                <div class="threat-icon"><i class="fas fa-bug"></i></div>
+                                <div class="threat-info">
+                                    <span class="threat-type">Malware Detected</span>
+                                    <span class="threat-time">5 minutes ago</span>
+                                </div>
+                                <div class="threat-severity medium">MEDIUM</div>
+                            </div>
+                            <div class="threat-item low">
+                                <div class="threat-icon"><i class="fas fa-eye"></i></div>
+                                <div class="threat-info">
+                                    <span class="threat-type">Steganography Suspected</span>
+                                    <span class="threat-time">8 minutes ago</span>
+                                </div>
+                                <div class="threat-severity low">LOW</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Performance Metrics</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="metrics-grid">
+                            <div class="metric-box">
+                                <span class="metric-number" id="files-processed">1,247</span>
+                                <span class="metric-label">Files Processed</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-number" id="threats-blocked">89</span>
+                                <span class="metric-label">Threats Blocked</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-number" id="avg-response">127ms</span>
+                                <span class="metric-label">Avg Response</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-number" id="success-rate">99.8%</span>
+                                <span class="metric-label">Success Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quantum Analytics -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h3><i class="fas fa-atom"></i> Quantum Analytics</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="quantum-chart" width="800" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Analysis Tab -->
+        <div class="tab-content" id="analyze-tab">
+            <div class="analyze-container">
+                <div class="upload-section">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <h3>Upload File for Analysis</h3>
+                            <p>Drag and drop files here or click to browse</p>
+                            <button class="btn-primary" id="browse-btn">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </button>
+                            <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.png,.zip" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-options">
+                    <h4>Analysis Options</h4>
+                    <div class="option-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="quantum-analysis" checked>
+                            <span class="checkmark"></span>
+                            Quantum-Enhanced Detection
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="neuromorphic-analysis" checked>
+                            <span class="checkmark"></span>
+                            Neuromorphic Processing
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="bio-analysis" checked>
+                            <span class="checkmark"></span>
+                            Bio-Inspired Intelligence
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="steganography-detection">
+                            <span class="checkmark"></span>
+                            Deep Steganography Detection
+                        </label>
+                    </div>
+                </div>
+
+                <div class="results-section" id="results-section" style="display: none;">
+                    <h3>Analysis Results</h3>
+                    <div id="analysis-results"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threats Tab -->
+        <div class="tab-content" id="threats-tab">
+            <div class="threats-container">
+                <div class="threats-header">
+                    <h2>Threat Intelligence Center</h2>
+                    <div class="threat-controls">
+                        <select id="threat-filter" class="filter-select">
+                            <option value="all">All Threats</option>
+                            <option value="high">High Severity</option>
+                            <option value="medium">Medium Severity</option>
+                            <option value="low">Low Severity</option>
+                        </select>
+                        <button class="btn-secondary" id="refresh-threats">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="threats-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">247</div>
+                        <div class="stat-label">Total Threats</div>
+                        <div class="stat-change positive">+12 today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Blocked</div>
+                        <div class="stat-change positive">+5 today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">158</div>
+                        <div class="stat-label">Quarantined</div>
+                        <div class="stat-change neutral">No change</div>
+                    </div>
+                </div>
+
+                <div class="threats-table-container">
+                    <table class="threats-table">
+                        <thead>
+                            <tr>
+                                <th>Threat Type</th>
+                                <th>File</th>
+                                <th>Severity</th>
+                                <th>Detection Method</th>
+                                <th>Timestamp</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="threats-table-body">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quantum Tab -->
+        <div class="tab-content" id="quantum-tab">
+            <div class="quantum-container">
+                <div class="quantum-header">
+                    <h2>Quantum Security Center</h2>
+                    <div class="quantum-status">
+                        <span class="quantum-indicator active"></span>
+                        <span>Quantum Systems Active</span>
+                    </div>
+                </div>
+
+                <div class="quantum-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-microchip"></i> Quantum Processors</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="processor-list">
+                                <div class="processor-item">
+                                    <span class="processor-name">Quantum Neural Network</span>
+                                    <div class="processor-status online">Online</div>
+                                </div>
+                                <div class="processor-item">
+                                    <span class="processor-name">Quantum SVM</span>
+                                    <div class="processor-status online">Online</div>
+                                </div>
+                                <div class="processor-item">
+                                    <span class="processor-name">Quantum CNN</span>
+                                    <div class="processor-status online">Online</div>
+                                </div>
+                                <div class="processor-item">
+                                    <span class="processor-name">Post-Quantum Crypto</span>
+                                    <div class="processor-status online">Online</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-wave-square"></i> Quantum Metrics</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="quantum-metrics">
+                                <div class="metric">
+                                    <span class="metric-label">Entanglement Fidelity</span>
+                                    <span class="metric-value">94.7%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Decoherence Time</span>
+                                    <span class="metric-value">125μs</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Gate Fidelity</span>
+                                    <span class="metric-value">99.2%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Quantum Volume</span>
+                                    <span class="metric-value">2048</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card full-width">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-area"></i> Quantum State Visualization</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="quantum-viz" id="quantum-visualization">
+                                <!-- Quantum state visualization -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings-tab">
+            <div class="settings-container">
+                <h2>System Settings</h2>
+                
+                <div class="settings-section">
+                    <h3>Security Configuration</h3>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <span>FIPS 140-2 Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="fips-mode" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                        <label class="setting-label">
+                            <span>Air-Gapped Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="airgapped-mode">
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                        <label class="setting-label">
+                            <span>Quantum Encryption</span>
+                            <label class="switch">
+                                <input type="checkbox" id="quantum-encryption" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Detection Settings</h3>
+                    <div class="setting-group">
+                        <label class="setting-label">
+                            <span>Threat Sensitivity</span>
+                            <select id="threat-sensitivity" class="setting-select">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                                <option value="maximum">Maximum</option>
+                            </select>
+                        </label>
+                        <label class="setting-label">
+                            <span>Auto-Quarantine</span>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-quarantine" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                        <label class="setting-label">
+                            <span>Real-time Monitoring</span>
+                            <label class="switch">
+                                <input type="checkbox" id="realtime-monitoring" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>System Maintenance</h3>
+                    <div class="maintenance-buttons">
+                        <button class="btn-secondary" id="run-diagnostics">
+                            <i class="fas fa-stethoscope"></i> Run Diagnostics
+                        </button>
+                        <button class="btn-secondary" id="update-signatures">
+                            <i class="fas fa-download"></i> Update Signatures
+                        </button>
+                        <button class="btn-secondary" id="backup-config">
+                            <i class="fas fa-save"></i> Backup Configuration
+                        </button>
+                        <button class="btn-danger" id="emergency-stop">
+                            <i class="fas fa-stop"></i> Emergency Stop
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing...</div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

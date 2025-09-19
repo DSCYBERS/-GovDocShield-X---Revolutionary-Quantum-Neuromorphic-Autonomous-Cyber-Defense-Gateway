@@ -1,0 +1,214 @@
+# GovDocShield X API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: govdocshield-api
+  namespace: govdocshield
+  labels:
+    app: govdocshield-api
+    component: core-api
+    tier: backend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: govdocshield-api
+  template:
+    metadata:
+      labels:
+        app: govdocshield-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: govdocshield-api
+        image: govdocshield/api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50051
+          name: grpc
+          protocol: TCP
+        env:
+        - name: GOVDOCSHIELD_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: GOVDOCSHIELD_ENV
+        - name: QUANTUM_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: QUANTUM_MODE
+        - name: NEUROMORPHIC_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: NEUROMORPHIC_MODE
+        - name: BIO_INSPIRED_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: BIO_INSPIRED_MODE
+        - name: DNA_STORAGE_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: DNA_STORAGE_MODE
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: LOG_LEVEL
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: govdocshield-config
+              key: REDIS_URL
+        - name: API_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: govdocshield-secrets
+              key: api-secret-key
+        volumeMounts:
+        - name: uploads-volume
+          mountPath: /app/uploads
+        - name: dna-storage-volume
+          mountPath: /app/dna_storage
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: uploads-volume
+        persistentVolumeClaim:
+          claimName: govdocshield-uploads-pvc
+      - name: dna-storage-volume
+        persistentVolumeClaim:
+          claimName: govdocshield-dna-pvc
+      - name: config-volume
+        configMap:
+          name: govdocshield-config
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - govdocshield-api
+              topologyKey: kubernetes.io/hostname
+---
+# API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: govdocshield-api-service
+  namespace: govdocshield
+  labels:
+    app: govdocshield-api
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+spec:
+  selector:
+    app: govdocshield-api
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+    protocol: TCP
+  type: ClusterIP
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: govdocshield-api-hpa
+  namespace: govdocshield
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: govdocshield-api
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60

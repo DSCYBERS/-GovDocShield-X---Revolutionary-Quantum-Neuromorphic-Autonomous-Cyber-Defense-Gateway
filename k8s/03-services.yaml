@@ -1,0 +1,217 @@
+# GovDocShield X Dashboard Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: govdocshield-dashboard
+  namespace: govdocshield
+  labels:
+    app: govdocshield-dashboard
+    component: web-ui
+    tier: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: govdocshield-dashboard
+  template:
+    metadata:
+      labels:
+        app: govdocshield-dashboard
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: govdocshield-dashboard
+        image: govdocshield/dashboard:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8501
+          name: http
+          protocol: TCP
+        env:
+        - name: GOVDOCSHIELD_API_URL
+          value: "http://govdocshield-api-service:8080"
+        - name: STREAMLIT_SERVER_PORT
+          value: "8501"
+        - name: STREAMLIT_SERVER_ADDRESS
+          value: "0.0.0.0"
+        - name: STREAMLIT_THEME_BASE
+          value: "dark"
+        - name: STREAMLIT_THEME_PRIMARY_COLOR
+          value: "#667eea"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /_stcore/health
+            port: 8501
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+---
+# Dashboard Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: govdocshield-dashboard-service
+  namespace: govdocshield
+  labels:
+    app: govdocshield-dashboard
+spec:
+  selector:
+    app: govdocshield-dashboard
+  ports:
+  - name: http
+    port: 8501
+    targetPort: 8501
+    protocol: TCP
+  type: ClusterIP
+---
+# Quantum Simulator Deployment (Optional)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quantum-simulator
+  namespace: govdocshield
+  labels:
+    app: quantum-simulator
+    component: quantum-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quantum-simulator
+  template:
+    metadata:
+      labels:
+        app: quantum-simulator
+    spec:
+      containers:
+      - name: quantum-simulator
+        image: rigetti/qvm:latest
+        ports:
+        - containerPort: 5555
+          name: qvm
+          protocol: TCP
+        env:
+        - name: QVM_VERBOSE
+          value: "true"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          tcpSocket:
+            port: 5555
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 5555
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+# Quantum Simulator Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: quantum-simulator-service
+  namespace: govdocshield
+  labels:
+    app: quantum-simulator
+spec:
+  selector:
+    app: quantum-simulator
+  ports:
+  - name: qvm
+    port: 5555
+    targetPort: 5555
+    protocol: TCP
+  type: ClusterIP
+---
+# ClamAV Antivirus Scanner
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clamav
+  namespace: govdocshield
+  labels:
+    app: clamav
+    component: antivirus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clamav
+  template:
+    metadata:
+      labels:
+        app: clamav
+    spec:
+      containers:
+      - name: clamav
+        image: clamav/clamav:1.2.0
+        volumeMounts:
+        - name: clamav-data
+          mountPath: /var/lib/clamav
+        - name: uploads-volume
+          mountPath: /app/uploads
+          readOnly: true
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+      volumes:
+      - name: clamav-data
+        persistentVolumeClaim:
+          claimName: clamav-pvc
+      - name: uploads-volume
+        persistentVolumeClaim:
+          claimName: govdocshield-uploads-pvc
+---
+# ClamAV PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clamav-pvc
+  namespace: govdocshield
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast-ssd
